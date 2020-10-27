@@ -1,0 +1,32 @@
+{{- if .Values.service.type }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helmbase.fullname" . }}
+  labels:
+    {{- include "helmbase.labels" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "tpl.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- with .Values.commonAnnotations }}
+  annotations: {{- include "tpl.render" ( dict "value" . "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  {{- if and (eq .Values.service.type "ClusterIP") .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  {{- if .Values.service.externalIPs }}
+  externalIPs: {{ toYaml .Values.service.externalIPs | nindent 4 }}
+  {{- end }}
+  {{- if .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml .Values.service.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  ports:
+    {{- include "tpl.render" (dict "value" .Values.service.ports "context" $) | nindent 4 }}
+  selector:
+    {{- include "helmbase.selectorLabels" . | nindent 4 }}
+{{- end -}}

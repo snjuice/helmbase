@@ -1,0 +1,7 @@
+apiVersion: v2
+name: helmbase
+description: Universal base Helm chart
+
+type: application
+
+version: 0.1.0

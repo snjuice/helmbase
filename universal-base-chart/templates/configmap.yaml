@@ -1,0 +1,25 @@
+
+{{- if .Values.customConfigMaps }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "helmbase.fullname" . }}
+  labels:
+    {{- include "helmbase.labels" $ | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "tpl.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- with .Values.commonAnnotations }}
+  annotations: {{- include "tpl.render" ( dict "value" . "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+{{- range $filename, $data := .Values.customConfigMaps }}
+  {{- if $data }}
+  {{ $filename }}: |
+{{ include "tpl.render" (dict "value" $data "context" $) | indent 4 }}
+  {{- end -}}
+  {{- if not $data }}
+  {{ $filename }}: ""
+  {{- end -}}
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,103 @@
+# Default values for helmbase chart.
+# Environment: All
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: image-registry
+  registry: docker/snapshots
+  pullPolicy: Always
+  tag: ""
+
+imagePullSecrets: 
+  - name: "ubase-reposecret"
+
+# Must override name in .values file if the same chart used for multiple services
+# otherwise chart name "helmbase" will be used in every deployment name, container name, etc.
+#nameOverride: sampleapp
+#fullnameOverride: sampleapp
+
+commonLabels: {}
+#  commonLabel: "label-value"
+
+commonAnnotations: {}
+#  commonAnnotation: "annotation-value"
+
+customSecrets: {}
+#  s1: "value-n1"
+#  s2: "value-n2"
+
+customConfigMaps: {}
+#  cm1-f1: "value-cm11"
+#  cm1-f2: |
+#    value-cm12
+#  # use reference to other values
+#  cm1-f3: '{{ .Values.image.registry }}'
+
+serviceAccount:
+  create: false
+#  annotations:
+#    serviceAccountAnnotation: "sa-annotation-value"
+#  name: ""
+
+podAnnotations: {}
+#  podAnnotation: "pod-annotation-value"
+
+podLabels: {}
+#  podLabels: "pod-label-value"
+
+
+podSecurityContext: {}
+
+securityContext: {}
+
+initContainers: {}
+
+customDnsConfig:
+  searches: []
+
+service:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+
+resources: {}
+
+ports:
+  - name: http
+    containerPort: 80
+    protocol: TCP
+
+customLivenessProbe: {}
+
+customReadinessProbe: {}
+
+ingress:
+  enabled: false
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  # hosts:
+  #   - host: microservice-a.yourhost.com
+  #     paths:
+  #       - path: /
+  #         pathType: ImplementationSpecific
+  #         backend:
+  #           servicePort: 80
+  # tls:
+  #   - secretName: microservice-a-tls
+  #     hosts:
+  #       - microservice-a.yourhost.com
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
